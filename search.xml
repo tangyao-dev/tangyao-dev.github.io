@@ -126,9 +126,13 @@
     <url>/2019/11/03/hadoop%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/</url>
     <content><![CDATA[<p>配置步骤主要包括以下三步</p>
 <ol>
-<li>安装并配置jdk</li>
-<li>设置SSH免密登录</li>
-<li>安装并配置hadoop</li>
+<li><p>安装并配置jdk</p>
+</li>
+<li><p>设置SSH免密登录</p>
+</li>
+<li><p>安装并配置hadoop</p>
+<p>详细步骤请阅读全文</p>
+</li>
 </ol>
 <a id="more"></a>
 
