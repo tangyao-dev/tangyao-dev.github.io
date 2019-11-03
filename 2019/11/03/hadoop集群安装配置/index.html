@@ -21,7 +21,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Muse',
+    scheme: 'Gemini',
     version: '7.5.0',
     exturl: false,
     sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
@@ -40,7 +40,7 @@
       labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
     },
     localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
-    path: '',
+    path: 'search.xml',
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     translation: {
       copy_button: '复制',
@@ -51,14 +51,15 @@
   };
 </script>
 
-  <meta name="description" content="安装并配置jdk 设置SSH免密登录 安装并配置hadoop">
+  <meta name="description" content="配置步骤主要包括以下三步  安装并配置jdk 设置SSH免密登录 安装并配置hadoop">
+<meta name="keywords" content="大数据,hadoop,配置">
 <meta property="og:type" content="article">
 <meta property="og:title" content="hadoop集群安装配置">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;03&#x2F;hadoop%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE&#x2F;index.html">
 <meta property="og:site_name" content="朝闻道">
-<meta property="og:description" content="安装并配置jdk 设置SSH免密登录 安装并配置hadoop">
+<meta property="og:description" content="配置步骤主要包括以下三步  安装并配置jdk 设置SSH免密登录 安装并配置hadoop">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-03T05:32:24.000Z">
+<meta property="og:updated_time" content="2019-11-03T14:33:02.000Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://yoursite.com/2019/11/03/hadoop%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/">
@@ -141,32 +142,27 @@
   <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home                          //��ҳ"></i>首页</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive          //�鵵"></i>归档</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th           //����"></i>分类</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags                     //��ǩ"></i>标签</a>
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user                   //����"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
 
   </li>
-        <li class="menu-item menu-item-schedule">
+        <li class="menu-item menu-item-tags">
 
-    <a href="/schedule/" rel="section"><i class="fa fa-fw fa-calendar        //�ճ̱�"></i>日程表</a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
 
   </li>
   </ul>
@@ -198,7 +194,7 @@
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/03/hadoop%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.jpg">
       <meta itemprop="name" content="Tang Yao">
       <meta itemprop="description" content="">
     </span>
@@ -219,7 +215,18 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2019-11-03 12:35:13 / 修改时间：13:32:24" itemprop="dateCreated datePublished" datetime="2019-11-03T12:35:13+08:00">2019-11-03</time>
+              <time title="创建时间：2019-11-03 12:35:13 / 修改时间：22:33:02" itemprop="dateCreated datePublished" datetime="2019-11-03T12:35:13+08:00">2019-11-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
             </span>
 
           
@@ -233,10 +240,121 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <ol>
+        <p>配置步骤主要包括以下三步</p>
+<ol>
 <li>安装并配置jdk</li>
 <li>设置SSH免密登录</li>
 <li>安装并配置hadoop</li>
+</ol>
+<a id="more"></a>
+
+<p><em>以下步骤均需要在所有机子中进行操作</em></p>
+<ol>
+<li><p><strong>安装并配置jdk</strong></p>
+<ol>
+<li><p>下载jdk，并解压到usr/local目录下，解压命令:</p>
+<p><code>tar -vxf jdk-8u151-linux-x64.tar.gz</code></p>
+</li>
+<li><p>配置java环境变量</p>
+<p>打开/etc/profile文件</p>
+<p><code>vi /etc/profile</code></p>
+<p>在末尾添加java环境变量:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#set java enviroment</span><br><span class="line">export JAVA_HOME=/usr/local/java/jdk1.8.0_151 </span><br><span class="line">export CLASSPATH=.:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar</span><br><span class="line">export CLASSPATH=.:$JAVA_HOME/lib/tools.jar </span><br><span class="line">export PATH=$PATH:$JAVA_HOME/bin</span><br></pre></td></tr></table></figure>
+
+<p>使配置环境立即生效:</p>
+<p><code>source /etc/profile</code></p>
+</li>
+<li><p>检查是否安装成功:</p>
+<p><code>java -version</code></p>
+<p>如果输出刚刚安装的jdk版本信息则安装成功，如果输出openjdk信息，说明安装的hadoop自带openjdk，需要将openjdk卸载，卸载后再次使环境变量生效，再次检查是否安装成功。</p>
+</li>
+</ol>
+</li>
+<li><p>设置SSH免密登录</p>
+<ol>
+<li><p>关闭防火墙:</p>
+<p><code>systemctl stop firewalld</code></p>
+<p><code>systemctl disable firewalld</code></p>
+</li>
+<li><p>关闭selinux</p>
+<p>打开selinux文件:</p>
+<p><code>vi /etc/sysconfig/selinux</code></p>
+<p>将SELINUX的值改为disabled</p>
+</li>
+<li><p>修改hostname及host文件</p>
+<p>修改hostname，一般一个机子做master，两个机子分别做slave1和slave2:</p>
+<p><code>hostnamectl set-hostname xxx</code></p>
+<p>修改/etc/hosts文件，将主机名和ip地址对应，命令如下：</p>
+<p><code>vi /etc/hosts</code></p>
+<p>在hosts中添加：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">xxx.xxx.xx.xx master</span><br><span class="line">xxx.xxx.xx.xx slave1</span><br><span class="line">xxx.xxx.xx.xx slave2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成ssh密钥</p>
+<p>输入如下命令生成key，不输入密码一直回车:</p>
+<p><code>ssh-keygen -t rsa</code></p>
+<p>/root文件夹下会自动生成.ssh文件夹</p>
+</li>
+<li><p>合并所有机器密钥</p>
+<p>进入.ssh文件夹，将密钥写入到authorized_keys文件中，如果没有自动生成authorized_keys文件，自己创建即可，写入命令如下：</p>
+<p><code>cat id_rsa.pub&gt;&gt;authorized_keys</code></p>
+<p>将其他机子的密钥也合并到authorized_keys文件中</p>
+</li>
+<li><p>测试是否设置成功</p>
+<p>输入:<code>ssh xxx</code></p>
+<p>xxx为步骤2中设置的主机名，如果输入此条命令访问其他主机不需要输入密码，则证明设置成功。如果设置失败，在/var/logs文件夹下查看报错日志，常见的错误有root文件夹或.ssh文件夹权限错误，使用chmod命令修改权限即可。</p>
+</li>
+</ol>
+</li>
+<li><p>安装并配置hadoop</p>
+<ol>
+<li><p>下载hadoop，并解压到/hadoop文件夹下，解压命令:</p>
+<p><code>tar -vxf hadoop-2.7.7.tar.gz</code></p>
+</li>
+<li><p>创建数据存放的文件夹:</p>
+<p><code>mkdir /hadoop/tmp</code></p>
+<p><code>mkdir /hadoop/hdfs</code></p>
+<p><code>mkdir /hadoop/hdfs/data</code></p>
+<p><code>mkdir /hadoop/hdfs/name</code></p>
+</li>
+<li><p>修改hadoop配置文件</p>
+<p>修改hadoop-env.sh文件：在文件末尾添加:</p>
+<p>export JAVA_HOME=/usr/local/java/jdk1.8.0_151（替换为你的jdk目录）</p>
+<p>修改yarn-env.sh文件：在文件末尾添加:</p>
+<p>export JAVA_HOME=/usr/local/java/jdk1.8.0_151（替换为你的jdk目录）</p>
+<p>修改core-site.xml文件：在文件末尾添加:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line"> &lt;property&gt;</span><br><span class="line">        &lt;name&gt;fs.defaultFS&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;hdfs://master:9000&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;io.file.buffer.size&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;131072&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;file:/hadoop/tmp&lt;/value&gt;</span><br><span class="line">        &lt;description&gt;Abase for other temporary directories.&lt;/description&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;hadoop.proxyuser.root.hosts&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;*&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;hadoop.proxyuser.root.groups&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;*&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+
+<p>修改hdfs-site.xml文件：在文件末尾添加:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line">  &lt;property&gt;</span><br><span class="line">        &lt;name&gt;dfs.namenode.name.dir&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;file:/hadoop/hdfs/name&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;dfs.datanode.data.dir&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;file:/hadoop/hdfs/data&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;dfs.replication&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;3&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;dfs.namenode.secondary.http-address&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;slave1:9001&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;dfs.webhdfs.enabled&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;true&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+
+<p>修改mapred-site.xml文件：在文件末尾添加:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;mapreduce.framework.name&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;yarn&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+
+<p>修改yarn-site.xml文件：在文件末尾添加:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line">&lt;!-- Site specific YARN configuration properties --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;mapreduce_shuffle&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.nodemanager.auxservices.mapreduce.shuffle.class&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;org.apache.hadoop.mapred.ShuffleHandler&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.resourcemanager.address&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;master:8032&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.resourcemanager.scheduler.address&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;master:8030&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.resourcemanager.resource-tracker.address&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;master:8031&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.resourcemanager.admin.address&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;master:8033&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.resourcemanager.webapp.address&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;master:8088&lt;/value&gt;                                       </span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+
+<hr>
+</li>
+<li><p>配置hadoop环境变量</p>
+<p>打开/etc/profile文件:</p>
+<p><code>vi /etc/profile</code></p>
+<p>在末尾添加hadoop环境变量:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#set hadoop enviroment</span><br><span class="line">      export HADOOP_HOME=/hadoop/hadoop-2.7.7</span><br><span class="line">export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin</span><br></pre></td></tr></table></figure>
+
+<p>使配置环境立即生效:</p>
+<p><code>source /etc/profile</code></p>
+</li>
+</ol>
+</li>
+<li><p>启动hadoop</p>
+<p>格式化namnode，命令如下：</p>
+<p><code>hdfs namenode -format</code></p>
+<p><code>start-all.sh</code></p>
+<p>测试是否启动成功，在浏览器输入网址</p>
+<p>master:50070（将master改为master节点机器的IP地址）</p>
+<p>master:8080（将master改为master节点机器的IP地址）</p>
+<p>所有机器均出现在master:50070网址中则证明启动成功，hdfs文件也可以在这里查看。</p>
+</li>
 </ol>
 
     </div>
@@ -246,9 +364,26 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a>
+              <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+              <a href="/tags/%E9%85%8D%E7%BD%AE/" rel="tag"># 配置</a>
+          </div>
 
         
 
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/11/03/hive%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" rel="prev" title="hive安装部署">
+                  hive安装部署 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
       </footer>
     
   </article>
@@ -291,7 +426,7 @@
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
   <img class="site-author-image" itemprop="image" alt="Tang Yao"
-    src="/images/avatar.gif">
+    src="/images/avatar.jpg">
   <p class="site-author-name" itemprop="name">Tang Yao</p>
   <div class="site-description" itemprop="description"></div>
 </div>
@@ -300,9 +435,21 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
@@ -340,7 +487,7 @@
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.0.0
   </div>
   <span class="post-meta-divider">|</span>
-  <div class="theme-info">主题 – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.5.0
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.5.0
   </div>
 
         
@@ -366,7 +513,7 @@
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script>
-<script src="/js/schemes/muse.js"></script>
+<script src="/js/schemes/pisces.js"></script>
 <script src="/js/next-boot.js"></script>
 
 

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>朝闻道</title>
+  
+  <subtitle>朝闻道，夕死可以</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2019-11-03T14:46:04.000Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>Tang Yao</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>hbase安装部署</title>
+    <link href="http://yoursite.com/2019/11/03/hbase%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/"/>
+    <id>http://yoursite.com/2019/11/03/hbase安装部署/</id>
+    <published>2019-11-03T14:46:02.000Z</published>
+    <updated>2019-11-03T14:46:04.000Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>hive安装部署</title>
+    <link href="http://yoursite.com/2019/11/03/hive%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/"/>
+    <id>http://yoursite.com/2019/11/03/hive安装部署/</id>
+    <published>2019-11-03T11:07:52.000Z</published>
+    <updated>2019-11-03T15:04:16.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;hive的安装前置条件为hadoop必须已经安装配置完成，hibe的安装步骤主要包括mysql的安装配置和hive安装配置两步，详细步骤请点击查看全文&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="hadoop" scheme="http://yoursite.com/categories/hadoop/"/>
+    
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="配置" scheme="http://yoursite.com/tags/%E9%85%8D%E7%BD%AE/"/>
+    
+      <category term="hive" scheme="http://yoursite.com/tags/hive/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>hadoop集群安装配置</title>
+    <link href="http://yoursite.com/2019/11/03/hadoop%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/"/>
+    <id>http://yoursite.com/2019/11/03/hadoop集群安装配置/</id>
+    <published>2019-11-03T04:35:13.000Z</published>
+    <updated>2019-11-03T14:33:02.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;配置步骤主要包括以下三步&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;安装并配置jdk&lt;/li&gt;
+&lt;li&gt;设置SSH免密登录&lt;/li&gt;
+&lt;li&gt;安装并配置hadoop&lt;/li&gt;
+&lt;/ol&gt;
+    
+    </summary>
+    
+    
+      <category term="hadoop" scheme="http://yoursite.com/categories/hadoop/"/>
+    
+    
+      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="配置" scheme="http://yoursite.com/tags/%E9%85%8D%E7%BD%AE/"/>
+    
+  </entry>
+  
+</feed>

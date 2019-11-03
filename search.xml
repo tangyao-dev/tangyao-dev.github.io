@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>hbase安装部署</title>
+    <url>/2019/11/03/hbase%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>hive安装部署</title>
+    <url>/2019/11/03/hive%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</url>
+    <content><![CDATA[<p>hive的安装前置条件为hadoop必须已经安装配置完成，hibe的安装步骤主要包括mysql的安装配置和hive安装配置两步，详细步骤请点击查看全文</p>
+<a id="more"></a>
+
+<ol>
+<li><p>安装mysql</p>
+<p>这里采用离线安装的方式。</p>
+<ol>
+<li><p>下载linux版本的mysql软件并解压</p>
+<p><a href="https://dev.mysql.com/downloads/mysql/" target="_blank" rel="noopener">mysql下载地址</a>，选择对应的linux版本进行下载。</p>
+<p>下载后使用如下命令解压：</p>
+<p><code>tar ‐xvf mysql‐5.7.25‐1.el6.x86_64.rpm‐bundle.tar</code></p>
+</li>
+<li><p>卸载旧版本的mysql</p>
+<p>查看是否有旧版本的mysql存在，命令如下：</p>
+<p><code>rpm -qa | grep mysql</code></p>
+<p><code>rpm -qa | grep mariadb</code></p>
+<p>如果存在进入目录删除即可，不存在不用进行任何操作</p>
+</li>
+<li><p>安装mysql</p>
+<p>解压后的mysql安装包里包含四个rpm包，这四个包之间有依赖关系，需要严格按照顺序依次安装，顺序为common→libs→client→server，安装命令依次为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mysql‐community‐common‐5.7.25‐1.el6.x86_64.rpm </span><br><span class="line">mysql‐community‐libs‐5.7.25‐1.el6.x86_64.rpm </span><br><span class="line">mysql‐community‐client‐5.7.25‐1.el6.x86_64.rpm </span><br><span class="line">mysql‐community‐server‐5.7.25‐1.el6.x86_64.rpm</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>配置mysql</p>
+<ol>
+<li><p>设置mysql密码</p>
+<p>启动mysql服务：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl enable mysqld.service</span><br></pre></td></tr></table></figure>
+
+<p>设置mysql密码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mysql ‐u root </span><br><span class="line">use mysql; </span><br><span class="line">update user set password=password(&apos;password&apos;) where user=&apos;root&apos;; </span><br><span class="line">quit;</span><br></pre></td></tr></table></figure>
+
+<p>如果设置的密码强度较低，可能会报错，可进入/etc/my.cnf文件，加入如下key-value值：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">validate_password_policy=LOW</span><br><span class="line">validate_password_length=6</span><br></pre></td></tr></table></figure>
+
+<p>登录mysql：</p>
+<p><code>mysql -u root –p</code></p>
+</li>
+<li><p>开通mysql远程访问</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Grant all privileges on *.* to &apos;root&apos;@&apos;%&apos; identified by &apos;neuhorizon@12345 6&apos; with grant option;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建hive数据库及用户</p>
+<p>创建hive数据库：</p>
+<p><code>CREATE DATABASE hive;</code></p>
+<p>创建用户：</p>
+<p><code>useradd hive passwd hive</code></p>
+<p>授权(注意在mysql界面输入)：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">CREATE USER &apos;hive&apos; IDENTIFIED BY &apos;hive&apos;;</span><br><span class="line">grant all privileges on *.* to &apos;hive&apos; identified by &apos;hive&apos;;</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>上传mysql驱动jar包至/hadoop/hive-2.3.6/lib目录下</p>
+</li>
+</ol>
+</li>
+<li><p>安装hive</p>
+<ol>
+<li><p>下载并解压hive安装包</p>
+<p>当前Hive可到apache官网下载，下载后解压：</p>
+<p><code>tar -C /hadoop/ -zxvf apache-hive-2.3.6-bin.tar.gz</code></p>
+<p>为方便以后使用，解压后进行重命名：</p>
+<p><code>mv apache-hive-2.3.6-bin/ hive-2.3.6</code></p>
+</li>
+<li><p>配置环境变量</p>
+<p>打开/etc/profile文件：</p>
+<p><code>vi /etc/profile</code></p>
+<p>在末尾加上以下内容：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export HADOOP_CONF_HOME=$HADOOP_HOME/etc/hadoop/</span><br><span class="line">export HIVE_HOME=/hadoop/hive-2.3.6</span><br><span class="line">export HIVE_CONF_DIR=/hadoop/hive-2.3.6/conf</span><br><span class="line">export PATH=$PATH:$HIVE_HOME/bin:$HADOOP_HOME/bin</span><br></pre></td></tr></table></figure>
+
+<p>使环境变量立即生效：</p>
+<p><code>source /etc/profile</code></p>
+</li>
+<li><p>配置配置文件</p>
+<p>首先进入hive-2.3.6/conf目录，对配置文件进行重命名：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd $HIVE_HOME/conf</span><br><span class="line">cp hive-env.sh.template hive-env.sh</span><br><span class="line">cp hive-exec-log4j2.properties.template hive-exec-log4j2.properties</span><br><span class="line">cp hive-log4j2.properties.template hive-log4j2.properties</span><br></pre></td></tr></table></figure>
+
+<p>修改hive-env.sh文件：在末尾添加：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export HADOOP_HOME=/hadoop/hadoop-2.7.7</span><br><span class="line">export HIVE_CONF_DIR=/hadoop/hive-2.3.6/conf</span><br></pre></td></tr></table></figure>
+
+<p>修改hive-site.xml文件：添加：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">   &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;</span><br><span class="line">   &lt;value&gt;jdbc:mysql://mysqlIP地址:3306/hive?createDatabaseIfNotExit=true&lt;/value&gt;</span><br><span class="line">   &lt;description&gt;JDBC connect string for a JDBC metastore&lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">   &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;</span><br><span class="line">   &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;</span><br><span class="line">   &lt;description&gt;Driver class name for a JDBC metastore&lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">   &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;</span><br><span class="line">   &lt;value&gt;root&lt;/value&gt;</span><br><span class="line">   &lt;description&gt;Username to use against metastore database&lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">   &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;</span><br><span class="line">   &lt;value&gt;112233&lt;/value&gt;</span><br><span class="line">   &lt;description&gt;password to use against metastore database&lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">   &lt;name&gt;hive.exec.local.scratchdir&lt;/name&gt;</span><br><span class="line">   &lt;value&gt;/usr/local/hive/tmp&lt;/value&gt;</span><br><span class="line">   &lt;description&gt;Local scratch space for Hive jobs&lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">   &lt;name&gt;hive.downloaded.resources.dir&lt;/name&gt;</span><br><span class="line">   &lt;value&gt;/usr/local/hive/tmp/resources&lt;/value&gt;</span><br><span class="line">   &lt;description&gt;Temporary local directory for added resources in the remote file system.&lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">   &lt;name&gt;hive.metastore.warehouse.dir&lt;/name&gt;</span><br><span class="line">   &lt;value&gt;/user/hive/warehouse&lt;/value&gt;</span><br><span class="line">   &lt;description&gt;location of default database for the warehouse&lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">   &lt;name&gt;hive.exec.scratchdir&lt;/name&gt;</span><br><span class="line">   &lt;value&gt;/tmp/hive&lt;/value&gt;</span><br><span class="line">   &lt;description&gt;HDFS root scratch dir for Hive jobs which gets created with write all (733) permission.&lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">   &lt;name&gt;hive.hbase.snapshot.restoredir&lt;/name&gt;</span><br><span class="line">   &lt;value&gt;/tmp&lt;/value&gt;</span><br><span class="line">   &lt;description&gt;The directory in which to restore the HBase table snapshot.&lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">   &lt;name&gt;hive.scratch.dir.permission&lt;/name&gt;</span><br><span class="line">   &lt;value&gt;700&lt;/value&gt;</span><br><span class="line">   &lt;description&gt;The permission for the user specific scratch directories that get created.&lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建本地目录及hdfs目录</p>
+<p>创建本地目录：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir /hadoop/hive</span><br><span class="line">mkdir /hadoop/hive/tmp</span><br><span class="line">mkdir /hadoop/hive/tmp/resources</span><br></pre></td></tr></table></figure>
+
+<p>创建hdfs目录：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hadoop fs -mkdir -p /tmp/hive</span><br><span class="line">hadoop fs -mkdir -p /apps/hive/warehouse</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>初始化元数据库并测试是否可用</p>
+<p>初始化元数据库：</p>
+<p><code>schematool -dbType mysql -initSchema</code></p>
+<p>测试hive是否可用：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hive</span><br><span class="line">show datatables;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mysql -u root -p;</span><br><span class="line">use hive</span><br><span class="line">show tables;</span><br></pre></td></tr></table></figure>
+
+<p>出现如下界面则证明配置成功：</p>
+<img src="/.com//hive.jpg" style="zoom:75%;"></li>
+</ol>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>hadoop</category>
+      </categories>
+      <tags>
+        <tag>hadoop</tag>
+        <tag>配置</tag>
+        <tag>hive</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hadoop集群安装配置</title>
+    <url>/2019/11/03/hadoop%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[<p>配置步骤主要包括以下三步</p>
+<ol>
+<li>安装并配置jdk</li>
+<li>设置SSH免密登录</li>
+<li>安装并配置hadoop</li>
+</ol>
+<a id="more"></a>
+
+<p><em>以下步骤均需要在所有机子中进行操作</em></p>
+<ol>
+<li><p><strong>安装并配置jdk</strong></p>
+<ol>
+<li><p>下载jdk，并解压到usr/local目录下，解压命令:</p>
+<p><code>tar -vxf jdk-8u151-linux-x64.tar.gz</code></p>
+</li>
+<li><p>配置java环境变量</p>
+<p>打开/etc/profile文件</p>
+<p><code>vi /etc/profile</code></p>
+<p>在末尾添加java环境变量:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#set java enviroment</span><br><span class="line">export JAVA_HOME=/usr/local/java/jdk1.8.0_151 </span><br><span class="line">export CLASSPATH=.:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar</span><br><span class="line">export CLASSPATH=.:$JAVA_HOME/lib/tools.jar </span><br><span class="line">export PATH=$PATH:$JAVA_HOME/bin</span><br></pre></td></tr></table></figure>
+
+<p>使配置环境立即生效:</p>
+<p><code>source /etc/profile</code></p>
+</li>
+<li><p>检查是否安装成功:</p>
+<p><code>java -version</code></p>
+<p>如果输出刚刚安装的jdk版本信息则安装成功，如果输出openjdk信息，说明安装的hadoop自带openjdk，需要将openjdk卸载，卸载后再次使环境变量生效，再次检查是否安装成功。</p>
+</li>
+</ol>
+</li>
+<li><p>设置SSH免密登录</p>
+<ol>
+<li><p>关闭防火墙:</p>
+<p><code>systemctl stop firewalld</code></p>
+<p><code>systemctl disable firewalld</code></p>
+</li>
+<li><p>关闭selinux</p>
+<p>打开selinux文件:</p>
+<p><code>vi /etc/sysconfig/selinux</code></p>
+<p>将SELINUX的值改为disabled</p>
+</li>
+<li><p>修改hostname及host文件</p>
+<p>修改hostname，一般一个机子做master，两个机子分别做slave1和slave2:</p>
+<p><code>hostnamectl set-hostname xxx</code></p>
+<p>修改/etc/hosts文件，将主机名和ip地址对应，命令如下：</p>
+<p><code>vi /etc/hosts</code></p>
+<p>在hosts中添加：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">xxx.xxx.xx.xx master</span><br><span class="line">xxx.xxx.xx.xx slave1</span><br><span class="line">xxx.xxx.xx.xx slave2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成ssh密钥</p>
+<p>输入如下命令生成key，不输入密码一直回车:</p>
+<p><code>ssh-keygen -t rsa</code></p>
+<p>/root文件夹下会自动生成.ssh文件夹</p>
+</li>
+<li><p>合并所有机器密钥</p>
+<p>进入.ssh文件夹，将密钥写入到authorized_keys文件中，如果没有自动生成authorized_keys文件，自己创建即可，写入命令如下：</p>
+<p><code>cat id_rsa.pub&gt;&gt;authorized_keys</code></p>
+<p>将其他机子的密钥也合并到authorized_keys文件中</p>
+</li>
+<li><p>测试是否设置成功</p>
+<p>输入:<code>ssh xxx</code></p>
+<p>xxx为步骤2中设置的主机名，如果输入此条命令访问其他主机不需要输入密码，则证明设置成功。如果设置失败，在/var/logs文件夹下查看报错日志，常见的错误有root文件夹或.ssh文件夹权限错误，使用chmod命令修改权限即可。</p>
+</li>
+</ol>
+</li>
+<li><p>安装并配置hadoop</p>
+<ol>
+<li><p>下载hadoop，并解压到/hadoop文件夹下，解压命令:</p>
+<p><code>tar -vxf hadoop-2.7.7.tar.gz</code></p>
+</li>
+<li><p>创建数据存放的文件夹:</p>
+<p><code>mkdir /hadoop/tmp</code></p>
+<p><code>mkdir /hadoop/hdfs</code></p>
+<p><code>mkdir /hadoop/hdfs/data</code></p>
+<p><code>mkdir /hadoop/hdfs/name</code></p>
+</li>
+<li><p>修改hadoop配置文件</p>
+<p>修改hadoop-env.sh文件：在文件末尾添加:</p>
+<p>export JAVA_HOME=/usr/local/java/jdk1.8.0_151（替换为你的jdk目录）</p>
+<p>修改yarn-env.sh文件：在文件末尾添加:</p>
+<p>export JAVA_HOME=/usr/local/java/jdk1.8.0_151（替换为你的jdk目录）</p>
+<p>修改core-site.xml文件：在文件末尾添加:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line"> &lt;property&gt;</span><br><span class="line">        &lt;name&gt;fs.defaultFS&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;hdfs://master:9000&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;io.file.buffer.size&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;131072&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;file:/hadoop/tmp&lt;/value&gt;</span><br><span class="line">        &lt;description&gt;Abase for other temporary directories.&lt;/description&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;hadoop.proxyuser.root.hosts&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;*&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;hadoop.proxyuser.root.groups&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;*&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+
+<p>修改hdfs-site.xml文件：在文件末尾添加:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line">  &lt;property&gt;</span><br><span class="line">        &lt;name&gt;dfs.namenode.name.dir&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;file:/hadoop/hdfs/name&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;dfs.datanode.data.dir&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;file:/hadoop/hdfs/data&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;dfs.replication&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;3&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;dfs.namenode.secondary.http-address&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;slave1:9001&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;dfs.webhdfs.enabled&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;true&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+
+<p>修改mapred-site.xml文件：在文件末尾添加:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;mapreduce.framework.name&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;yarn&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+
+<p>修改yarn-site.xml文件：在文件末尾添加:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line">&lt;!-- Site specific YARN configuration properties --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;mapreduce_shuffle&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.nodemanager.auxservices.mapreduce.shuffle.class&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;org.apache.hadoop.mapred.ShuffleHandler&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.resourcemanager.address&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;master:8032&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.resourcemanager.scheduler.address&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;master:8030&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.resourcemanager.resource-tracker.address&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;master:8031&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.resourcemanager.admin.address&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;master:8033&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.resourcemanager.webapp.address&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;master:8088&lt;/value&gt;                                       </span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+
+<hr>
+</li>
+<li><p>配置hadoop环境变量</p>
+<p>打开/etc/profile文件:</p>
+<p><code>vi /etc/profile</code></p>
+<p>在末尾添加hadoop环境变量:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#set hadoop enviroment</span><br><span class="line">      export HADOOP_HOME=/hadoop/hadoop-2.7.7</span><br><span class="line">export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin</span><br></pre></td></tr></table></figure>
+
+<p>使配置环境立即生效:</p>
+<p><code>source /etc/profile</code></p>
+</li>
+</ol>
+</li>
+<li><p>启动hadoop</p>
+<p>格式化namnode，命令如下：</p>
+<p><code>hdfs namenode -format</code></p>
+<p><code>start-all.sh</code></p>
+<p>测试是否启动成功，在浏览器输入网址</p>
+<p>master:50070（将master改为master节点机器的IP地址）</p>
+<p>master:8080（将master改为master节点机器的IP地址）</p>
+<p>所有机器均出现在master:50070网址中则证明启动成功，hdfs文件也可以在这里查看。</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>hadoop</category>
+      </categories>
+      <tags>
+        <tag>大数据</tag>
+        <tag>hadoop</tag>
+        <tag>配置</tag>
+      </tags>
+  </entry>
+</search>
