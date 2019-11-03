@@ -8,7 +8,9 @@
   <entry>
     <title>hive安装部署</title>
     <url>/2019/11/03/hive%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/</url>
-    <content><![CDATA[<p>hive的安装前置条件为hadoop必须已经安装配置完成，hibe的安装步骤主要包括mysql的安装配置和hive安装配置两步，详细步骤请点击查看全文</p>
+    <content><![CDATA[<p>hive的安装前置条件为hadoop必须已经安装配置完成</p>
+<p>hive的安装步骤主要包括mysql的安装配置和hive安装配置两步</p>
+<p>详细步骤请点击查看全文</p>
 <a id="more"></a>
 
 <ol>
