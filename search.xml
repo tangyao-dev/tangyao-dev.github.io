@@ -124,16 +124,8 @@
   <entry>
     <title>hadoop集群安装配置</title>
     <url>/2019/11/03/hadoop%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/</url>
-    <content><![CDATA[<p>配置步骤主要包括以下三步</p>
-<ol>
-<li><p>安装并配置jdk</p>
-</li>
-<li><p>设置SSH免密登录</p>
-</li>
-<li><p>安装并配置hadoop</p>
+    <content><![CDATA[<p>配置步骤主要包括安装并配置jdk，设置SSH免密登录，安装并配置hadoop三步</p>
 <p>详细步骤请阅读全文</p>
-</li>
-</ol>
 <a id="more"></a>
 
 <p><em>以下步骤均需要在所有机子中进行操作</em></p>
