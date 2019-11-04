@@ -51,12 +51,15 @@
   };
 </script>
 
-  <meta property="og:type" content="article">
+  <meta name="description" content="hbase的安装部署主要包括zookeeper的安装配置和hbase的安装配置两步 详细步骤请点击阅读全文">
+<meta name="keywords" content="hadoop,配置,hbase">
+<meta property="og:type" content="article">
 <meta property="og:title" content="hbase安装部署">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;03&#x2F;hbase%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2&#x2F;index.html">
 <meta property="og:site_name" content="朝闻道">
+<meta property="og:description" content="hbase的安装部署主要包括zookeeper的安装配置和hbase的安装配置两步 详细步骤请点击阅读全文">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-03T14:46:04.000Z">
+<meta property="og:updated_time" content="2019-11-04T04:27:44.000Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://yoursite.com/2019/11/03/hbase%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/">
@@ -210,9 +213,26 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2019-11-03 22:46:02 / 修改时间：22:46:04" itemprop="dateCreated datePublished" datetime="2019-11-03T22:46:02+08:00">2019-11-03</time>
+              <time title="创建时间：2019-11-03 22:46:02" itemprop="dateCreated datePublished" datetime="2019-11-03T22:46:02+08:00">2019-11-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-11-04 12:27:44" itemprop="dateModified" datetime="2019-11-04T12:27:44+08:00">2019-11-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
             </span>
 
           
@@ -226,7 +246,86 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <p>hbase的安装部署主要包括zookeeper的安装配置和hbase的安装配置两步</p>
+<p>详细步骤请点击阅读全文</p>
+<a id="more"></a>
+
+<p>以下操作均需要在所有机子上完成</p>
+<ol>
+<li><p>zookeeper安装配置</p>
+<ol>
+<li><p>下载并解压zookeeper</p>
+<p>解压命令：<code>tar -C /hadoop/ -vxf apache-zookeeper-3.5.6-bin.tar</code></p>
+<p>为了方便操作，将文件夹改名为zookeeper-3.5.6:</p>
+<p><code>mv apache-zookeeper-3.5.6-bin  zookeeper-3.5.6</code></p>
+</li>
+<li><p>配置zookeeper环境变量</p>
+<p>打开etc/profile文件：<br><code>vi /etc/profile</code></p>
+<p>在文件末尾添加zookeeper变量信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#set zookeeper ervironment</span><br><span class="line">ZOOKEEPER_HOME=/hadoop/zookeeper-3.5.6</span><br><span class="line">PATH=$PATH:$ZOOKEEPER_HOME/bin</span><br></pre></td></tr></table></figure>
+
+<p>使环境变量立即生效：<br><code>source /etc/profile</code></p>
+</li>
+<li><p>修改zookeeper配置文件</p>
+<p>进入zookeeper的config目录，复制zoo_sample.cfg文件，并改名为zoo.cfg：</p>
+<p><code>cp zoo_sample.cfg  zoo.cfg</code></p>
+<p>根据需要修改zoo.cfg文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tickTime=2000                     </span><br><span class="line">dataDir=/hadoop/zookeeper/data </span><br><span class="line">clientPort=2181                   </span><br><span class="line">initLimit=5                       </span><br><span class="line">syncLimit=2  		       </span><br><span class="line">server.A=B:C:D</span><br></pre></td></tr></table></figure>
+
+<p>配置信息说明：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tickTime：Zookeeper 服务器之间或客户端与服务器之间维持心跳的时间间隔</span><br><span class="line">dataDir：写数据的日志文件保存目录</span><br><span class="line">clientPort：客户端连接 Zookeeper服务器的端口，Zookeeper会监听这个端口接受客户端的访问请求</span><br><span class="line">initLimit：Zookeeper接受客户端初始化连接时最长能忍受多少个心跳时间间隔数</span><br><span class="line">syncLimit：标识 Leader 与 Follower 之间发送消息，请求和应答时间长度</span><br><span class="line">server.A=B:C:D  ：A是一个数字，表示这个是第几号服务器；B是这个服务器的ip地址；C表示的是这个服务器与集群中的Leader服务器交换信息的端口；D表示的是万一集群中的 Leader 服务器挂了，需要一个端口来重新进行选举，选出一个新的Leader，而这个端口就是用来执行选举时服务器相互通信的端口。</span><br><span class="line">例如：server.1=master:2888:3888</span><br></pre></td></tr></table></figure>
+
+<p>在dataDir设定的目录下创建myid文件，各机器分别将zoo.cfg文件中server.A=B:C:D这一项中的A值写道myid文件中，只写这个数字即可。</p>
+</li>
+<li><p>启动zookeeper</p>
+<p>在所有机器上执行：</p>
+<p><code>zkServer.sh start</code></p>
+<p>启动后，可通过<code>zkServer.sh status</code>命令查看leader是哪台机器</p>
+</li>
+</ol>
+</li>
+<li><p>hbase安装配置</p>
+<ol>
+<li><p>下载并解压hbase</p>
+<p>解压命令：<code>tar -C /hadoop/ -vxf hbase-2.2.2-bin.tar.gz</code></p>
+<p>为了方便操作，将文件夹改名为hbase-2.2.2:</p>
+<p><code>mv hbase-2.2.2-bin  hbase-2.2.2</code></p>
+</li>
+<li><p>配置hbase环境变量</p>
+<p>打开etc/profile文件：<br><code>vi /etc/profile</code></p>
+<p>在文件末尾添加zookeeper变量信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#set hbase ervironment</span><br><span class="line">export HBASE_HOME=/hadoop/hbase-2.2.2</span><br><span class="line">export PATH=$PATH:$HBASE_HOME/bin</span><br></pre></td></tr></table></figure>
+
+<p>使环境变量立即生效：<br><code>source /etc/profile</code></p>
+</li>
+<li><p>修改hbase配置文件</p>
+<p>进入hbase的config目录，根据需要修改hbase-enc.sh文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/usr/local/java/jdk1.8.0_151</span><br><span class="line">export HBASE_LOG_DIR=/var/log/hbase</span><br><span class="line">export HBASE_MANAGES_ZK=false</span><br></pre></td></tr></table></figure>
+
+<p>配置信息说明：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">JAVA_HOME：安装的jdk路径，均需配置</span><br><span class="line">HBASE_LOG_DIR：日志文件存储地址</span><br><span class="line">HBASE_MANAGES_ZK：如果使用HBase自带的Zookeeper值设成true，如果使用自己安装的Zookeeper需要将该值设为false</span><br></pre></td></tr></table></figure>
+
+<p>将zookeeper的配置文件拷贝到hbase的conf目录：</p>
+<p><code>cp /hadoop/zookeeper-3.5.6/conf/zoo.cfg    /hadoop/hbase-2.2.2/conf/</code></p>
+<p>配置hbase-site.xml文件：在configuration中间添加：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">        &lt;name&gt;hbase.rootdir&lt;/name&gt;  </span><br><span class="line">        &lt;value&gt;hdfs://master:9000/hbase&lt;/value&gt; </span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">        &lt;name&gt;hbase.cluster.distributed&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;true&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">       &lt;name&gt;hbase.zookeeper.quorum&lt;/name&gt;</span><br><span class="line">       &lt;value&gt;master,datanode&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">        &lt;name&gt;hbase.master.info.bindAddress&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;0.0.0.0&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">        &lt;name&gt;hbase.master.info.port&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;16010&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">        &lt;name&gt;hbase.master.port&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;16000&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+
+<p>配置信息说明：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">hbase.rootdir：Hbase数据存储目录</span><br><span class="line">hbase.cluster.distributed：是否是完全分布式模式，单机模式和伪分布式模式需要将该值设为false</span><br><span class="line">hbase.zookeeper.quorum: zookeeper的集群，多台机器以逗号分隔（建议使用单数）</span><br><span class="line">Hhbase.master.info.bindAddress  Base Master web: 界面绑定的地址 默认: 0.0.0.0</span><br><span class="line">hbase.master.info.port HBase Master web: 界面端口.设置为-1 意味着你不想让他运行,默认: 60010</span><br><span class="line">hbase.master.port: Hbase的Master的端口,默认: 60000</span><br></pre></td></tr></table></figure>
+
+<p>打开hbase的conf目录，修改regionservers文件，加入hadoop集群的 namenode节点和datanode节点的主机名，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">master</span><br><span class="line">slave1</span><br><span class="line">slave2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动hbase</p>
+<p>之前我们已经启动了hadoop集群和zookeeper，因此直接启动hbase即可，注意启动hbase的操作只需要master主机执行：</p>
+<p><code>start-hbase.sh</code></p>
+<p>若启动成功，在浏览器输入master:16010可以看到所有节点均出现在该网页上。</p>
+<p>关闭时先由master关闭hbase，再由每个机器分别关闭自己的zookeeper，最后关闭hadoop集群。</p>
+</li>
+</ol>
+</li>
+</ol>
+
     </div>
 
     
@@ -234,6 +333,11 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+              <a href="/tags/%E9%85%8D%E7%BD%AE/" rel="tag"># 配置</a>
+              <a href="/tags/hbase/" rel="tag"># hbase</a>
+          </div>
 
         
 
@@ -313,7 +417,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
