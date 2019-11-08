@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-11-04T04:27:44.000Z</updated>
+  <updated>2019-11-08T13:40:34.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>hive常用命令及Java连接</title>
+    <link href="http://yoursite.com/2019/11/08/hive%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8Ajava%E8%BF%9E%E6%8E%A5/"/>
+    <id>http://yoursite.com/2019/11/08/hive常用命令及java连接/</id>
+    <published>2019-11-08T13:19:21.000Z</published>
+    <updated>2019-11-08T13:40:34.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本文主要介绍hive与关系数据库的区别、hive常用命令（包括托管表与外部表、分区与分桶、动态分区等）、以及使用Java的jdbc连接hive进行操作。&lt;/p&gt;
+&lt;p&gt;详细内容请点击阅读全文&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="hadoop" scheme="http://yoursite.com/categories/hadoop/"/>
+    
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="hive" scheme="http://yoursite.com/tags/hive/"/>
+    
+      <category term="命令" scheme="http://yoursite.com/tags/%E5%91%BD%E4%BB%A4/"/>
+    
+      <category term="java api" scheme="http://yoursite.com/tags/java-api/"/>
+    
+  </entry>
   
   <entry>
     <title>hbase安装部署</title>
@@ -36,9 +64,9 @@
     
       <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
     
-      <category term="配置" scheme="http://yoursite.com/tags/%E9%85%8D%E7%BD%AE/"/>
-    
       <category term="hbase" scheme="http://yoursite.com/tags/hbase/"/>
+    
+      <category term="配置" scheme="http://yoursite.com/tags/%E9%85%8D%E7%BD%AE/"/>
     
   </entry>
   
@@ -87,11 +115,11 @@
       <category term="hadoop" scheme="http://yoursite.com/categories/hadoop/"/>
     
     
-      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
-    
       <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
     
       <category term="配置" scheme="http://yoursite.com/tags/%E9%85%8D%E7%BD%AE/"/>
+    
+      <category term="大数据" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
     
   </entry>
   

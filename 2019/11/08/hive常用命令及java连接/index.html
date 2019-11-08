@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="朝闻道" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="本文主要介绍hive与关系数据库的区别、hive常用命令（包括托管表与外部表、分区与分桶、动态分区等）、以及使用Java的jdbc连接hive进行操作。 详细内容请点击阅读全文">
+<meta name="keywords" content="hadoop,hive,命令,java api">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hive常用命令及Java连接">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;08&#x2F;hive%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8Ajava%E8%BF%9E%E6%8E%A5&#x2F;index.html">
+<meta property="og:site_name" content="朝闻道">
+<meta property="og:description" content="本文主要介绍hive与关系数据库的区别、hive常用命令（包括托管表与外部表、分区与分桶、动态分区等）、以及使用Java的jdbc连接hive进行操作。 详细内容请点击阅读全文">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;08&#x2F;hive%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8Ajava%E8%BF%9E%E6%8E%A5&#x2F;hive1.jpg">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;08&#x2F;hive%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8Ajava%E8%BF%9E%E6%8E%A5&#x2F;hive2.jpg">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;08&#x2F;hive%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8Ajava%E8%BF%9E%E6%8E%A5&#x2F;hive3.jpg">
+<meta property="og:updated_time" content="2019-11-08T13:40:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;08&#x2F;hive%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8Ajava%E8%BF%9E%E6%8E%A5&#x2F;hive1.jpg">
+
+<link rel="canonical" href="http://yoursite.com/2019/11/08/hive%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8Ajava%E8%BF%9E%E6%8E%A5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>hive常用命令及Java连接 | 朝闻道</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">朝闻道</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">朝闻道，夕死可以</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/08/hive%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8Ajava%E8%BF%9E%E6%8E%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Tang Yao">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="朝闻道">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          hive常用命令及Java连接
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-11-08 21:19:21 / 修改时间：21:40:34" itemprop="dateCreated datePublished" datetime="2019-11-08T21:19:21+08:00">2019-11-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要介绍hive与关系数据库的区别、hive常用命令（包括托管表与外部表、分区与分桶、动态分区等）、以及使用Java的jdbc连接hive进行操作。</p>
+<p>详细内容请点击阅读全文</p>
+<a id="more"></a>
+
+<ol>
+<li><p>hive与关系数据库的区别</p>
+<p>在介绍hive的使用前，先对hive与传统关系数据库的异同做一个比较，了解一下为什么需要hive。</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th>HQL</th>
+<th>SQL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">数据存储</td>
+<td>HDFS，Hbase</td>
+<td>LocalFS</td>
+</tr>
+<tr>
+<td align="left">数据格式</td>
+<td>用户自定义</td>
+<td>系统决定</td>
+</tr>
+<tr>
+<td align="left">数据更新</td>
+<td>不支持（覆盖之前数据）</td>
+<td>支持</td>
+</tr>
+<tr>
+<td align="left">索引</td>
+<td>有（0.8版本后添加）</td>
+<td>有</td>
+</tr>
+<tr>
+<td align="left">执行</td>
+<td>MapReduce（select * from table）</td>
+<td>Executor</td>
+</tr>
+<tr>
+<td align="left">执行延迟</td>
+<td>高</td>
+<td>低</td>
+</tr>
+<tr>
+<td align="left">可扩展性</td>
+<td>高（UDF、UDAF、UDTF）</td>
+<td>低</td>
+</tr>
+<tr>
+<td align="left">数据规模</td>
+<td>大（TB级别）</td>
+<td>小</td>
+</tr>
+<tr>
+<td align="left">数据检查</td>
+<td>读时模式</td>
+<td>写时模式</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>hive常用命令</p>
+<p>2.1 托管表和外部表</p>
+<p>创建并删除托管表和外部表。</p>
+<p>托管表数据存储在仓库目录下，删除时会删除元数据和数据，而外部表数据可以存储在任何hdfs目录下，删除时只会删除元数据。</p>
+<p>创建语句命令，托管表：</p>
+<p><code>create table TenminData_tg(attr1 STRING)</code></p>
+<p>外部表：</p>
+<p><code>create table TenminData_tg(attr1 STRING) LOCATION &#39;路径&#39;;</code></p>
+<p>元数据可在navicat连接的hive里看到。</p>
+<p>2.2 数据分区</p>
+<p>创建带分区的表，并比较分区与否对查询的效率影响。</p>
+<p>创建带分区托管表语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> TenminData(attr1 <span class="keyword">STRING</span>,attr2 <span class="keyword">STRING</span>)</span><br><span class="line">PARTITIONED <span class="keyword">BY</span> ( attr1 <span class="keyword">string</span>,attr2 <span class="keyword">string</span>)</span><br><span class="line"><span class="keyword">row</span> <span class="keyword">format</span> <span class="keyword">delimited</span> <span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">','</span>;</span><br></pre></td></tr></table></figure>
+
+<p>创建分区：</p>
+<p><code>alter table tenmindata add partition(attr1=&#39;a1&#39;,attr2=&#39;a2&#39;);</code></p>
+<p>加载数据到分区：</p>
+<p><code>load data local inpath &#39;/路径/*.bz2&#39; into table tenmindata partition(attr1=&#39;a1&#39;,attr2=&#39;a2&#39;);</code></p>
+<p>查看分区：</p>
+<p><code>show partitions tenmindata;</code></p>
+<p>2.3 数据分桶</p>
+<p>分桶语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> TenminData()</span><br><span class="line">PARTITIONED <span class="keyword">BY</span> ( fc <span class="keyword">string</span>)</span><br><span class="line">CLUSTERED <span class="keyword">BY</span> (FAN_NO) SORTED <span class="keyword">BY</span> (DATA_DATE <span class="keyword">ASC</span>) <span class="keyword">INTO</span> <span class="number">5</span> BUCKETS</span><br><span class="line"><span class="keyword">row</span> <span class="keyword">format</span> <span class="keyword">delimited</span> <span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">','</span>;</span><br></pre></td></tr></table></figure>
+
+<p>分桶建议让hive自动分桶，一般通过hash算法进行分桶。分桶可以在分区的基础上进行，进一步提高查询效率。分桶后可以进行取样操作：</p>
+<p><code>SELECT * FROM TENMINDATA3 TABLESAMPLE(BUCKET 1 OUT OF 2 ON FAN_NO);</code></p>
+<p><code>SELECT * FROM TENMINDATA3 TABLESAMPLE(50 persent/row/M);</code></p>
+<p>2.4 指定存储文件格式</p>
+<p>指定hive存储的文件格式，包括AVRO、ORC、PARQUET、RCFILE、SEQUENCEFILE和TEXTFILE，使用方法在建表语句后加上：</p>
+<p><code>CLUSTERED BY (FAN_NO) SORTED BY (DATA_DATE ASC) INTO 5 BUCKETS
+STORED AS RCFILE</code></p>
+<p>导入fc=1风场的数据，采用CPU计算，六种文件格式效率对比如下：</p>
+<table>
+<thead>
+<tr>
+<th>存储格式</th>
+<th>分桶后最大文件大小（M）</th>
+<th>运行时间（S）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AVRO</td>
+<td>14.5</td>
+<td>22.957</td>
+</tr>
+<tr>
+<td>ORC</td>
+<td>1.62</td>
+<td>21.854</td>
+</tr>
+<tr>
+<td>PARQUET</td>
+<td>2.98</td>
+<td>23.136</td>
+</tr>
+<tr>
+<td>RCFILE</td>
+<td>12.78</td>
+<td>20.691</td>
+</tr>
+<tr>
+<td>SEQUENCEFILE</td>
+<td>9.95</td>
+<td>20.663</td>
+</tr>
+<tr>
+<td>TEXTFILE</td>
+<td>9.17</td>
+<td>22.171</td>
+</tr>
+</tbody></table>
+<p>2.5 其他命令</p>
+<p>使用insert overwrite select注入数据。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> tenmindata4 <span class="keyword">partition</span>(fc=<span class="number">1</span>,fj=<span class="string">'WT02287'</span>) <span class="keyword">SELECT</span> DATASOURCE,FAN_NO,DATA_DATE,FAN_STATUS,WIND_SPEED,ROTOR_RS,RS,WIND_DIRECTION,YAW_ANGLE,BOX_T,BOX_BEARING_T,ENVIRON_T,WT_T,ROTOR_GROUP_T,A_PHASE_C,B_PHASE_C,C_PHASE_C,A_PHASE_V,B_PHASE_V,C_PHASE_V,MACHINE_FREQUENCY,REACTIVE_POWER,<span class="keyword">POWER</span>,POWER_FACTOR,TOTAL_POWER,TOTAL_GEN_TIME,DOWN_TIME,STANDBY_TIME,REMARK <span class="keyword">FROM</span> TENMINDATA <span class="keyword">WHERE</span> FC=<span class="number">1</span> <span class="keyword">AND</span> FJ=<span class="string">'WT02287'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>使用From的方式插入数据</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">FROM TENMINDATA </span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> tenmindata4 <span class="keyword">partition</span>(fc=<span class="number">1</span>,fj=<span class="string">'WT02288'</span>)</span><br><span class="line"><span class="keyword">SELECT</span> DATASOURCE,FAN_NO,DATA_DATE,FAN_STATUS,WIND_SPEED,ROTOR_RS,RS,WIND_DIRECTION,YAW_ANGLE,BOX_T,BOX_BEARING_T,ENVIRON_T,WT_T,ROTOR_GROUP_T,A_PHASE_C,B_PHASE_C,C_PHASE_C,A_PHASE_V,B_PHASE_V,C_PHASE_V,MACHINE_FREQUENCY,REACTIVE_POWER,<span class="keyword">POWER</span>,POWER_FACTOR,TOTAL_POWER,TOTAL_GEN_TIME,DOWN_TIME,STANDBY_TIME,REMARK</span><br><span class="line"><span class="keyword">WHERE</span> FC=<span class="number">1</span> <span class="keyword">AND</span> FJ=<span class="string">'WT02288'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>2.6 动态分区的创建</p>
+<p>使用静态分区插入数据时，每次都需要指定插入的分区的值，非常繁琐，如果使用动态分区，hive可以自动匹配分区的值，从而提高效率。</p>
+<p>开启动态分区：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">set hive.exec.dynamic.partition=true;  </span><br><span class="line">#开启动态分区，默认是false</span><br><span class="line">set hive.exec.dynamic.partition.mode=nonstrict;</span><br><span class="line">#开启允许所有分区都是动态的，否则必须要有静态分区才能使用</span><br></pre></td></tr></table></figure>
+
+<p>SQL语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> TenminData4 (  </span><br><span class="line">    &gt; <span class="string">`DATASOURCE`</span> <span class="keyword">string</span> ,</span><br><span class="line">    &gt; <span class="string">`FAN_NO`</span> <span class="keyword">string</span> ,</span><br><span class="line">    &gt; <span class="string">`DATA_DATE`</span> <span class="keyword">string</span>,</span><br><span class="line">    &gt; <span class="string">`FAN_STATUS`</span> <span class="keyword">double</span>,</span><br><span class="line">    &gt; <span class="string">`WIND_SPEED`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'风速'</span>,</span><br><span class="line">    &gt; <span class="string">`ROTOR_RS`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'电机转速'</span>,</span><br><span class="line">    &gt; <span class="string">`RS`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'桨叶转速'</span>,</span><br><span class="line">    &gt; <span class="string">`WIND_DIRECTION`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'风向'</span>,</span><br><span class="line">    &gt; <span class="string">`YAW_ANGLE`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'偏航角度'</span>,</span><br><span class="line">    &gt; <span class="string">`BOX_T`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'齿轮箱油温'</span>,</span><br><span class="line">    &gt; <span class="string">`BOX_BEARING_T`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'齿轮箱轴承油温'</span>,</span><br><span class="line">    &gt; <span class="string">`ENVIRON_T`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'环境温度'</span>,</span><br><span class="line">    &gt; <span class="string">`WT_T`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'机舱温度'</span>,</span><br><span class="line">    &gt; <span class="string">`ROTOR_GROUP_T`</span> <span class="keyword">double</span>  <span class="keyword">comment</span> <span class="string">'发电机温度'</span>,</span><br><span class="line">    &gt; <span class="string">`A_PHASE_C`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'A相电流'</span>,</span><br><span class="line">    &gt; <span class="string">`B_PHASE_C`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'B相电流'</span>,</span><br><span class="line">    &gt; <span class="string">`C_PHASE_C`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'C相电流'</span>,</span><br><span class="line">    &gt; <span class="string">`A_PHASE_V`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'A相电压'</span>,</span><br><span class="line">    &gt; <span class="string">`B_PHASE_V`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'B相电压'</span>,</span><br><span class="line">    &gt; <span class="string">`C_PHASE_V`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'C相电压'</span>,</span><br><span class="line">    &gt; <span class="string">`MACHINE_FREQUENCY`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'电机频率'</span>,</span><br><span class="line">    &gt; <span class="string">`REACTIVE_POWER`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'无功功率'</span>,</span><br><span class="line">    &gt; <span class="string">`POWER`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'有功功率'</span>,</span><br><span class="line">    &gt; <span class="string">`POWER_FACTOR`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'功率因素'</span>,</span><br><span class="line">    &gt; <span class="string">`TOTAL_POWER`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'总发电量'</span>,</span><br><span class="line">    &gt; <span class="string">`TOTAL_GEN_TIME`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'总发电时间'</span>,</span><br><span class="line">    &gt; <span class="string">`DOWN_TIME`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'故障时间'</span>,</span><br><span class="line">    &gt; <span class="string">`STANDBY_TIME`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'备用时间'</span>,</span><br><span class="line">    &gt; <span class="string">`REMARK`</span> <span class="keyword">double</span> <span class="keyword">comment</span> <span class="string">'备注'</span>)</span><br><span class="line">    &gt; PARTITIONED <span class="keyword">BY</span> ( fc <span class="keyword">string</span>,fj <span class="keyword">string</span>)</span><br><span class="line">    &gt; <span class="keyword">row</span> <span class="keyword">format</span> <span class="keyword">delimited</span> <span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">','</span>;</span><br><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> Tenmindata4 <span class="keyword">partition</span> (fc, fj) <span class="keyword">select</span> * <span class="keyword">from</span> Tenmindata <span class="keyword">where</span> fc=<span class="string">'1'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果截图：</p>
+<p> <img src="/2019/11/08/hive%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8Ajava%E8%BF%9E%E6%8E%A5/hive1.jpg" alt></p>
+<p>从截图可以看到，我们不需要挨个指定fj的值，动态分区的方式可以帮助我们自动根据fj分区导入数据。从而大大提高效率。</p>
+</li>
+<li><p>使用java api在hive中创建表</p>
+</li>
+</ol>
+<p>首先使用<code>shiveserver2</code>命令开启机子上的hive服务</p>
+<p>代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HiveJDBCTest</span> </span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String URL = <span class="string">"jdbc:hive2://IP地址:10000/default"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String DRIVER = <span class="string">"org.apache.hive.jdbc.HiveDriver"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PASSWORD = <span class="string">"hive"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String USER = <span class="string">"hive"</span>; </span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    	<span class="keyword">try</span> &#123;</span><br><span class="line">            Class.forName(DRIVER);</span><br><span class="line">            Connection conn = DriverManager.getConnection(URL,USER,PASSWORD);</span><br><span class="line">            Statement st = conn.createStatement();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// create table</span></span><br><span class="line">            String sql = <span class="string">"create table TenminData3 (  `DATASOURCE` string ,"</span></span><br><span class="line">            		+ <span class="string">"`FAN_NO` string ,"</span></span><br><span class="line">            		+ <span class="string">"`DATA_DATE` string,"</span></span><br><span class="line">            		+ <span class="string">"`FAN_STATUS` double,"</span></span><br><span class="line">            		+ <span class="string">"`WIND_SPEED` double,"</span></span><br><span class="line">            		+ <span class="string">"`ROTOR_RS` double,"</span></span><br><span class="line">            		+ <span class="string">"`RS` double,"</span></span><br><span class="line">            		+ <span class="string">"`WIND_DIRECTION` double,"</span></span><br><span class="line">            		+ <span class="string">"`YAW_ANGLE` double,"</span></span><br><span class="line">            		+ <span class="string">"`BOX_T` double,"</span></span><br><span class="line">            		+ <span class="string">"`BOX_BEARING_T` double,"</span></span><br><span class="line">            		+ <span class="string">"`ENVIRON_T` double,"</span></span><br><span class="line">            		+ <span class="string">"`WT_T` double,"</span></span><br><span class="line">            		+ <span class="string">"`ROTOR_GROUP_T` double,"</span></span><br><span class="line">            		+ <span class="string">"`A_PHASE_C` double,"</span></span><br><span class="line">            		+ <span class="string">"`B_PHASE_C` double,"</span></span><br><span class="line">            		+ <span class="string">"`C_PHASE_C` double,"</span></span><br><span class="line">            		+ <span class="string">"`A_PHASE_V` double,"</span></span><br><span class="line">            		+ <span class="string">"`B_PHASE_V` double,"</span></span><br><span class="line">            		+ <span class="string">"`C_PHASE_V` double,"</span></span><br><span class="line">            		+ <span class="string">"`MACHINE_FREQUENCY` double,"</span></span><br><span class="line">            		+ <span class="string">"`REACTIVE_POWER` double,"</span></span><br><span class="line">            		+ <span class="string">"`POWER` double,"</span></span><br><span class="line">            		+ <span class="string">"`POWER_FACTOR` double,"</span></span><br><span class="line">            		+ <span class="string">"`TOTAL_POWER` double,"</span></span><br><span class="line">            		+ <span class="string">"`TOTAL_GEN_TIME` double,"</span></span><br><span class="line">            		+ <span class="string">"`DOWN_TIME` double,"</span></span><br><span class="line">            		+ <span class="string">"`STANDBY_TIME` double,"</span></span><br><span class="line">            		+ <span class="string">"`REMARK` double)"</span></span><br><span class="line">            		+ <span class="string">"PARTITIONED BY ( fc string,fj string)"</span></span><br><span class="line">            		+ <span class="string">"row format delimited fields terminated by ','"</span>;</span><br><span class="line">            st.execute(sql);</span><br><span class="line">            <span class="comment">// show tables</span></span><br><span class="line">            sql = <span class="string">"show tables"</span>;</span><br><span class="line">            ResultSet rs = st.executeQuery(sql);</span><br><span class="line">            <span class="keyword">while</span>(rs.next())&#123;</span><br><span class="line">                System.out.println(rs.getString(<span class="number">1</span>));</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// describe table</span></span><br><span class="line">            sql = <span class="string">"desc tenmindata3"</span>;</span><br><span class="line">            rs = st.executeQuery(sql);</span><br><span class="line">            <span class="keyword">while</span>(rs.next())&#123;</span><br><span class="line">                System.out.println(rs.getString(<span class="number">1</span>));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果截图：</p>
+<p><img src="/2019/11/08/hive%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8Ajava%E8%BF%9E%E6%8E%A5/hive2.jpg" alt></p>
+<p><img src="/2019/11/08/hive%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8Ajava%E8%BF%9E%E6%8E%A5/hive3.jpg" alt></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+              <a href="/tags/hive/" rel="tag"># hive</a>
+              <a href="/tags/%E5%91%BD%E4%BB%A4/" rel="tag"># 命令</a>
+              <a href="/tags/java-api/" rel="tag"># java api</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/03/hbase%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2/" rel="next" title="hbase安装部署">
+                  <i class="fa fa-chevron-left"></i> hbase安装部署
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Tang Yao"
+    src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Tang Yao</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tang Yao</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
