@@ -146,8 +146,8 @@
 <p>[2]Zhiheng Huang,Wei Xu,Kai Yu. 2015. Bidirectional LSTM-CRF Models for Sequence Tagging. arXiv preprint arXiv:1508.01991.</p>
 <p>[3]Guillaume Lample,Miguel Ballesteros,Sandeep Subramanian,Kazuya Kawakami,Chris Dyer. 2016.Neural Architectures for Named Entity Recognition. arXiv preprint arXiv:1603.0136.</p>
 <p>[4]宗成庆.统计自然语言处理[M].清华大学出版社:北京,2013:266.</p>
-<p>[5]JeemyJohn.浅析深度学习在实体识别和关系抽取中的应用[EB/OL].<a href="https://blog.csdn.net/u013709270/article/details/78944538,2017-12-31" target="_blank" rel="noopener">https://blog.csdn.net/u013709270/article/details/78944538,2017-12-31</a>.</p>
-<p>[6]用户1508658.【NLP-NER】什么是命名实体识别？[EB/OL].<a href="https://cloud.tencent.com/developer/article/1510122,2019-9-20" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1510122,2019-9-20</a>.</p>
+<p>[5]JeemyJohn.浅析深度学习在实体识别和关系抽取中的应用[EB/OL].<a href="https://blog.csdn.net/u013709270/article/details/78944538" target="_blank" rel="noopener">https://blog.csdn.net/u013709270/article/details/78944538</a>, 2017-12-31.</p>
+<p>[6]用户1508658.【NLP-NER】什么是命名实体识别？[EB/OL].<a href="https://cloud.tencent.com/developer/article/1510122" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1510122</a>, 2019-9-20.</p>
 ]]></content>
       <categories>
         <category>nlp</category>
