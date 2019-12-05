@@ -1,6 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>命名实体识别综述</title>
+    <url>/2019/12/05/%E5%91%BD%E5%90%8D%E5%AE%9E%E4%BD%93%E8%AF%86%E5%88%AB%E7%BB%BC%E8%BF%B0/</url>
+    <content><![CDATA[<p>本文基于宗成庆老师的《统计自然语言处理》一书，总结了命名实体识别领域的历史、方法总结、开源工具及应用。其中，方法包括基于统计模型的、基于CRF的、基于多特征的和基于深度学习的。</p>
+<p>详细内容请点击阅读全文</p>
+<a id="more"></a>
+
+<h1 id="命名实体识别"><a href="#命名实体识别" class="headerlink" title="命名实体识别"></a>命名实体识别</h1><h2 id="命名实体识别历史："><a href="#命名实体识别历史：" class="headerlink" title="命名实体识别历史："></a>命名实体识别历史：</h2><p>根据美国NIST自动内容抽取（automatic content extraction,ACE）评测计划的解释，实体概念在文本中的引用（entity mention，或称“指称项”）有三种形式：命名性指称、名词性指称和代词性指称。</p>
+<p>在MUC-6中首次使用了命名实体（named entity）这一术语，之后，在CoNLL组织的评测任务中扩大了专有名词的范围，包含了产品名的识别，甚至涉及电影名、书名、手机号码和电子邮件地址等。另外值得关注的还有，很多学者对生物信息学领域的专用名词（如蛋白质、DNA、RNA等）及其关系识别做了大量研究工作，比较知名的有美国亚利桑那州立大学基于条件随机场的BANNER开源NER框架；甚至在有些研究中并不限定“实体”的类型，而是将其看作开放域的NERC，把“命名实体”的类别按层次化结构划分，试图涵盖在报章中出现较高频率的名字和严格的指称词，类别总数达到约200种。</p>
+<p>但是最普遍，也最重要的仍然是人地名和组织机构名这三类专有名词的识别方法。</p>
+<p>与大部分自然语言处理任务一样，早期的命名实体识别方法大都是基于规则的，系统的实现代价高、准确率低、难以移植和复用。随着深度学习的发展，现在占据主流的是基于大规模语料库的统计方法和机器学习方法。</p>
+<h2 id="命名实体识别方法总结："><a href="#命名实体识别方法总结：" class="headerlink" title="命名实体识别方法总结："></a>命名实体识别方法总结：</h2><p>接下来对其中的基于统计模型的命名实体识别方法和基于条件随机场的命名实体识别方法进行比较详细的介绍。</p>
+<h3 id="基于统计模型的命名实体识别方法归纳"><a href="#基于统计模型的命名实体识别方法归纳" class="headerlink" title="基于统计模型的命名实体识别方法归纳"></a>基于统计模型的命名实体识别方法归纳</h3><p>将基于统计模型的命名实体识别方法根据是否有监督进行划分，并对每种类型常采用的方法进行总结：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>采用的模型或方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>有监督的学习方法</td>
+<td>隐马尔科夫模型、最大熵模型、支持向量机、条件随机场、语言模型、决策树</td>
+</tr>
+<tr>
+<td>半监督的学习方法</td>
+<td>利用标注的小数据集学习</td>
+</tr>
+<tr>
+<td>无监督的学习方法</td>
+<td>利用词汇资源进行聚类</td>
+</tr>
+<tr>
+<td>混合方法</td>
+<td>几种模型相结合</td>
+</tr>
+</tbody></table>
+<h3 id="基于CRF的命名实体识别方法"><a href="#基于CRF的命名实体识别方法" class="headerlink" title="基于CRF的命名实体识别方法"></a>基于CRF的命名实体识别方法</h3><p>基本介绍：属于有监督的学习方法，方法简单易行，得到了广泛应用。</p>
+<p>实现思路：将命名实体识别过程看作一个序列标注问题。将给定的文本先进行分词处理，然后对人名、简单地名和简单的组织机构名（不进行嵌套）进行识别，最后识别复合地名和复合组织机构名。</p>
+<p>实现细节：训练阶段：首先需要将分词语料的标记符号转化成用于命名实体序列标注的标记，即用字母表示起始用字、内部用字、不属于某个实体等；然后确定特征模板，一般采用当前位置的前后n(n&gt;=1)个位置上的字，注意窗口不能过大也不能过小，过大会导致通用性差、执行效率低等问题，过小又容易产生过拟合；注意不同的命名实体识别一般采用不同的特征模板。</p>
+<p>实现结果：组织结构名是最难识别的一种命名实体：人名识别FI值可以达到90%，但组织机构名一般只能达到85%。</p>
+<h3 id="基于多特征的命名实体识别方法"><a href="#基于多特征的命名实体识别方法" class="headerlink" title="基于多特征的命名实体识别方法"></a>基于多特征的命名实体识别方法</h3><p>特征的颗粒度是有区别的，比如词性和角色级特征属于比较大颗粒的特征，而词形就属于比较小颗粒的特征，两种颗粒的特征是有相互补充的作用，因此基于多特征的命名实体识别方法被提出。该方法的大致思路是在分词和词性标注的基础上进一步进行命名实体的识别，为了限制明显不合理的实体候选的产生，还可以同时使用专家知识进行限制。从而提高识别性能和系统效率。</p>
+<p>实现思路同样将命名实体识别看作一个序列化数据的标注问题。只是模型由四部分构成，分别为词形上下文模型P（WC）、词性上下文模型P（TC）、实体词形模型P（W|WC）和实体词性模型P（T|TC）。其中词形和词性上下文模型一般均采用三元语法模型近似描述，实体模型则充分考虑每一类命名实体具有的不同内部特征，如：人名识别可能采用基于字的三元模型，地名和机构名则更适合采用基于词的三元模型等。另外，由于基于统计模型的命名实体识别有一个很严重的问题：数据稀疏，严重影响到系统的性能，因此可以引入专家知识来限制候选实体的产生。</p>
+<p>结合专家知识与纯统计模型的命名实体识别能力（F-测度值）提高比例：</p>
+<table>
+<thead>
+<tr>
+<th>识别类别</th>
+<th>提高量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>人名</td>
+<td>5.4%</td>
+</tr>
+<tr>
+<td>地名</td>
+<td>1.4%</td>
+</tr>
+<tr>
+<td>机构名</td>
+<td>2.2%</td>
+</tr>
+</tbody></table>
+<h3 id="基于深度学习的方法"><a href="#基于深度学习的方法" class="headerlink" title="基于深度学习的方法"></a>基于深度学习的方法</h3><p>目前命名实体识别效果最好的方法还是基于条件随机场，但是随着深度学习的发展，深度学习也表现出来了越来越多的优势，比如它的非线性可以拟合更多更精细的特征、可以从更大量的语料库中抽取模型、抗噪声能力更强等。因此越来越多结合了深度学习和条件随机场的方法也取得了不错的效果。比较典型的有LSTM与CRF的结合，采用LSTM作为特征抽取器，再接一个CRF层来作为输出层；CNN与CRF的结合，CNN拥有并行能力，运算速度快，这是这种方法一个独特的优势；BERT与LSTM与CRF的结合，利用预训练好的BERT模型，再用少量的标注数据进行训练也取得了不错的效果。</p>
+<h2 id="命名实体识别开源工具："><a href="#命名实体识别开源工具：" class="headerlink" title="命名实体识别开源工具："></a>命名实体识别开源工具：</h2><table>
+<thead>
+<tr>
+<th>工具名称</th>
+<th>开发者</th>
+<th>原理</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Stanford NER</td>
+<td>美国斯坦福大学自然语言处理研究组</td>
+<td>条件随机场</td>
+<td>通用（针对英文）</td>
+</tr>
+<tr>
+<td>YooName</td>
+<td>加拿大渥太华大学Nadeau博士</td>
+<td>半监督学习方法</td>
+<td>命名实体抽取和分类（针对英文）</td>
+</tr>
+<tr>
+<td>Minor Third</td>
+<td>美国卡耐基梅隆大学Willian W.Cohen教授</td>
+<td>条件随机场和用于隐马尔科夫模型训练的区分式训练方法等多种序列标注方法</td>
+<td>通用（针对英文）</td>
+</tr>
+<tr>
+<td>BANNER</td>
+<td>美国亚利桑那州立大学</td>
+<td>条件随机场</td>
+<td>面向生物医学领域（针对英文）</td>
+</tr>
+<tr>
+<td>MALLET</td>
+<td>美国麻省理工阿姆斯特分校</td>
+<td>利用隐马尔科夫模型、最大熵和条件随机场等模型实现的有限状态转换机</td>
+<td>文本分类、聚类、主题建模和信息抽取等（针对英文）</td>
+</tr>
+<tr>
+<td>S-MSRSeg</td>
+<td>微软亚洲研究院</td>
+<td></td>
+<td>针对中文</td>
+</tr>
+<tr>
+<td>BaseNER</td>
+<td>上海交通大学赵海</td>
+<td>CRF++模型</td>
+<td>针对中文</td>
+</tr>
+</tbody></table>
+<h2 id="命名实体识别应用"><a href="#命名实体识别应用" class="headerlink" title="命名实体识别应用"></a>命名实体识别应用</h2><table>
+<thead>
+<tr>
+<th>应用</th>
+<th>原理</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>优化搜索引擎算法</td>
+<td>对文章运行一个NER模型，并永久存储与之相关的实体，然后可以将搜索查询中的关键标记与网站文章关联的标记进行比较，以实现快速高效的搜索</td>
+</tr>
+<tr>
+<td>优化推荐系统</td>
+<td>提取与用户的历史记录相关联的实体</td>
+</tr>
+<tr>
+<td>语义网络</td>
+<td>语义网络一般包括概念、实例及其对应的关系，其中实例有很大一部分是命名实体</td>
+</tr>
+<tr>
+<td>提高机器翻译准确率</td>
+<td>命名实体的翻译常常会有特殊的翻译规则，先将命名实体提取出来再进行翻译，可以提高机器翻译的准确率。</td>
+</tr>
+</tbody></table>
+<p>应用实际上还有很多，很多NLP下游任务都需要命名实体识别作为支撑，限于篇幅原因，只列举上述这些。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1]Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics, pages 1064–1074,Berlin, Germany, August 7-12, 2016. c 2016 Association for Computational Linguistics</p>
+<p>[2]Zhiheng Huang,Wei Xu,Kai Yu. 2015. Bidirectional LSTM-CRF Models for Sequence Tagging. arXiv preprint arXiv:1508.01991.</p>
+<p>[3]Guillaume Lample,Miguel Ballesteros,Sandeep Subramanian,Kazuya Kawakami,Chris Dyer. 2016.Neural Architectures for Named Entity Recognition. arXiv preprint arXiv:1603.0136.</p>
+<p>[4]宗成庆.统计自然语言处理[M].清华大学出版社:北京,2013:266.</p>
+<p>[5]JeemyJohn.浅析深度学习在实体识别和关系抽取中的应用[EB/OL].<a href="https://blog.csdn.net/u013709270/article/details/78944538,2017-12-31" target="_blank" rel="noopener">https://blog.csdn.net/u013709270/article/details/78944538,2017-12-31</a>.</p>
+<p>[6]用户1508658.【NLP-NER】什么是命名实体识别？[EB/OL].<a href="https://cloud.tencent.com/developer/article/1510122,2019-9-20" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1510122,2019-9-20</a>.</p>
+]]></content>
+      <categories>
+        <category>nlp</category>
+      </categories>
+      <tags>
+        <tag>nlp</tag>
+        <tag>综述</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>NLP基本概念及发展历史介绍</title>
     <url>/2019/12/05/NLP%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%8F%8A%E5%8F%91%E5%B1%95%E5%8E%86%E5%8F%B2%E4%BB%8B%E7%BB%8D/</url>
     <content><![CDATA[<p>本文基于宗成庆老师的《统计自然语言处理》一书，整理了自然语言处理领域的基本概念、所要研究的基本问题、研究目前面临的瓶颈、基本研究方法及研究现状。</p>
@@ -567,8 +724,8 @@ STORED AS RCFILE</code></p>
       </categories>
       <tags>
         <tag>hadoop</tag>
-        <tag>hbase</tag>
         <tag>配置</tag>
+        <tag>hbase</tag>
       </tags>
   </entry>
   <entry>
@@ -807,9 +964,9 @@ STORED AS RCFILE</code></p>
         <category>hadoop</category>
       </categories>
       <tags>
+        <tag>大数据</tag>
         <tag>hadoop</tag>
         <tag>配置</tag>
-        <tag>大数据</tag>
       </tags>
   </entry>
 </search>
