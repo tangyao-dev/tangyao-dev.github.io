@@ -1,6 +1,309 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>NLP基本概念及发展历史介绍</title>
+    <url>/2019/12/05/NLP%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%8F%8A%E5%8F%91%E5%B1%95%E5%8E%86%E5%8F%B2%E4%BB%8B%E7%BB%8D/</url>
+    <content><![CDATA[<p>本文基于宗成庆老师的《统计自然语言处理》一书，整理了自然语言处理领域的基本概念、所要研究的基本问题、研究目前面临的瓶颈、基本研究方法及研究现状。</p>
+<p>详细内容请点击阅读全文</p>
+<a id="more"></a>
+
+<table>
+<thead>
+<tr>
+<th>问题的提出</th>
+<th></th>
+<th></th>
+<th>中文网页检索的最高准确率不足40%</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+<td></td>
+<td>跨语言通讯和信息获取技术具有重要的用途</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>发现或挖掘社交网络，确定不同的实体、事件和知识之间的关联</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>让计算机能够自动或半自动地理解自然语言文本，懂得人的意图和心声</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>让计算机实现海量语言文本的自动处理、挖掘和有效利用，满足不同用户的各种需求，实现个性化信息服务</td>
+<td></td>
+</tr>
+<tr>
+<td>基本概念</td>
+<td>相关学科简介</td>
+<td>语言学</td>
+<td>研究语言的本质、结构和发展规律的科学</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>语音学</td>
+<td>语音和文字是语言的两个基本属性</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>计算语言学</td>
+<td>人工智能和语言学的分支学科</td>
+<td>通过建立形式化的计算模型来分析、理解和生成自然语言的学科</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>自然语言处理</td>
+<td>研究如何利用计算机技术对语言文本（句子、篇章或话语等）进行处理和加工的一门学科</td>
+<td>包括对词法、句法、语义和语用等信息的识别、分类、提取、转换和生成等各种处理方法和实现技术</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>自然语言理解</td>
+<td>是探索人类自身语言能力和语言思 维活动的本质，研究模仿人类语言认知过程的自然语 言处理方法和实现技术的一门学科</td>
+<td>表现(act)如何？ 反应(react)如何？ 相互作用(interact )如何？</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>中文信息处理</td>
+<td>针对中文的自然语言处理技术</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>三个不同的语系</td>
+<td>屈折语(fusional language/ inflectional language)</td>
+<td>用词的形态变化表示语法关系</td>
+<td>英语、法语</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>黏着语(agglutinative language)</td>
+<td>词内有专门表示语法意义的附加成分，词根或词干与附加成分的结合不紧密</td>
+<td>日语、韩语、土耳其语</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>孤立语(analytic language)(分析语, isolating language)</td>
+<td>形态变化少，语法关系靠词序和虚词表示</td>
+<td>汉语</td>
+</tr>
+<tr>
+<td></td>
+<td>人类语言技术（HLT）</td>
+<td>应用目标</td>
+<td>机器翻译(Machine translation, MT)</td>
+<td>实现一种语言到另一种语言的自动翻译。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>信息检索(Information retrieval)</td>
+<td>也称情报检索，就是利用计算机系统从大量文档中找到符合用户需要的相关信息</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>自动文摘 (Automatic summarization / Automatic  abstracting)</td>
+<td>将原文档的主要内容或某方面的内容提取出来，形成原文档的摘要</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>问答系统 (Question-answering system)</td>
+<td>通过计算机系统对人提出的问题的理解，利用自动推理等手段，在有关知识资源中自动求解答案并做出相应的回答。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>信息过滤 (Information filtering)</td>
+<td>通过计算机系统自动识别和过滤那些满足特定条件 的文档信息。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>信息抽取 (Information extraction)</td>
+<td>从指定文档中或者海量文本中抽取出用户感兴趣的信息。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>文档分类 (Document categorization)</td>
+<td>其目的就是利用计算机系统对大量的文档按照一定的分类标准（例如，根据主题或内容划分等）实现自动归类。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>情感分类(Sentimental classification)</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>文字编辑和自动校对(Automatic proofreading)</td>
+<td>对文字拼写、用词、甚至语法、文档格式等进行自动检查、校对和编排。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>语言教学 (Language teaching)</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>文字识别 (Character recognition)</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>语音识别 (automatic speech recognition, ASR)</td>
+<td>将输入语音信号自动转换成书面文字。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>文语转换/ 语音合成 (text-to-speech synthesis)</td>
+<td>将书面文本自动转换成对应的语音表征。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>说话人识别/认同/验证 (speaker recognition/  identification/ verification)</td>
+<td>对一言语样品做声学分析，依此推断(确定或 验证)说话人的身份。</td>
+</tr>
+<tr>
+<td>基本问题</td>
+<td>形态学 (Morphology) 问题</td>
+<td></td>
+<td>单词的识别/ 汉语的分词问题。</td>
+<td>研究词(word) 由有意义的基本单位－词素 (morphemes)的构成问题。</td>
+</tr>
+<tr>
+<td></td>
+<td>句法 (Syntax) 问题</td>
+<td></td>
+<td>研究句子结构成分之间的相互关系和组成句子 序列的规则 。</td>
+<td>建立快速有效的句子结构分析方法</td>
+</tr>
+<tr>
+<td></td>
+<td>语义 (Semantics) 问题</td>
+<td></td>
+<td>研究如何从一个语句中词的意义，以及这些词 在该语句中句法结构中的作用来推导出该语句的意 义。</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>语用学(Pragmatics) 问题</td>
+<td></td>
+<td>研究在不同上下文中语句的应用，以及上下文 对语句理解所产生的影响。</td>
+<td>是研究语义学未能涵盖 的那些意义。</td>
+</tr>
+<tr>
+<td></td>
+<td>语音学(Phonetics) 问题</td>
+<td></td>
+<td>研究语音特性、语音描述、分类及转写方法等</td>
+<td></td>
+</tr>
+<tr>
+<td>主要困难</td>
+<td>大量歧义(ambiguity)现象</td>
+<td>词法歧义、词性歧义、结构歧义、语义歧义、语音歧义、多音字及韵律等歧义</td>
+<td>普遍存在的不确定性：词法、句法、语义、语用和语音各个层面 未知语言现象的不可预测性：新的词汇、新的术语、新的语义和语法无处不在 始终面临的数据不充分性：有限的语言集合永远无法涵盖开放的语言现象 语言知识表达的复杂性：语义知识的模糊性和错综复杂的关联性难以用常规方法有效地描述，为语义计算带来了极大的困难 机器翻译中映射单元的不对等性：词法表达不相同、句法结构不一致、语义概念不对等</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>大量未知语言现象</td>
+<td>新词、人名、地名、术语等</td>
+<td>新含义</td>
+<td>新用法和新句型等</td>
+</tr>
+<tr>
+<td>基本研究方法</td>
+<td>理性主义</td>
+<td>基于规则的分析方法建立符号处理系统</td>
+<td>知识库＋推理系统 = NLP系统</td>
+<td>理论基础：Chomsky 的文法理论</td>
+</tr>
+<tr>
+<td></td>
+<td>经验主义</td>
+<td>基于大规模真实语料(语言数据)建立计算方法</td>
+<td>语料库＋统计模型 = NLP系统</td>
+<td>理论基础：统计学、信息论、机器学习</td>
+</tr>
+<tr>
+<td></td>
+<td>数据驱动的翻译方法（如SMT和 NMT）</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>基于统计的方法</td>
+<td></td>
+<td>根据贝叶斯公式求解使P值（概率）最大的C（目标句子）</td>
+<td></td>
+</tr>
+<tr>
+<td>研究现状</td>
+<td>部分问题得到了解决，可以为人们提供辅助性帮助，如：专业领域文档翻译，电子词典，搜索引擎，文字录入等；</td>
+<td></td>
+<td>基础问题研究仍任重而道远，如：语义表示和 计算、高质量的自动翻译等；</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>参考文献：</p>
+<p>[1]宗成庆.统计自然语言处理[M].清华大学出版社:北京,2013:266.</p>
+]]></content>
+      <categories>
+        <category>nlp</category>
+      </categories>
+      <tags>
+        <tag>技术所存在问题</tag>
+        <tag>技术发展史</tag>
+        <tag>nlp</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>hive常用命令及Java连接</title>
     <url>/2019/11/08/hive%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8Ajava%E8%BF%9E%E6%8E%A5/</url>
     <content><![CDATA[<p>本文主要介绍hive与关系数据库的区别、hive常用命令（包括托管表与外部表、分区与分桶、动态分区等）、以及使用Java的jdbc连接hive进行操作。</p>

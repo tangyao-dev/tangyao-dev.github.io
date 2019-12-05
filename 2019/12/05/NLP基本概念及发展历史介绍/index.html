@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="朝闻道" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="本文基于宗成庆老师的《统计自然语言处理》一书，整理了自然语言处理领域的基本概念、所要研究的基本问题、研究目前面临的瓶颈、基本研究方法及研究现状。 详细内容请点击阅读全文">
+<meta name="keywords" content="技术所存在问题,技术发展史,nlp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NLP基本概念及发展历史介绍">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;05&#x2F;NLP%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%8F%8A%E5%8F%91%E5%B1%95%E5%8E%86%E5%8F%B2%E4%BB%8B%E7%BB%8D&#x2F;index.html">
+<meta property="og:site_name" content="朝闻道">
+<meta property="og:description" content="本文基于宗成庆老师的《统计自然语言处理》一书，整理了自然语言处理领域的基本概念、所要研究的基本问题、研究目前面临的瓶颈、基本研究方法及研究现状。 详细内容请点击阅读全文">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-12-05T11:36:32.000Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2019/12/05/NLP%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%8F%8A%E5%8F%91%E5%B1%95%E5%8E%86%E5%8F%B2%E4%BB%8B%E7%BB%8D/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>NLP基本概念及发展历史介绍 | 朝闻道</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">朝闻道</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">朝闻道，夕死可以</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/05/NLP%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E5%8F%8A%E5%8F%91%E5%B1%95%E5%8E%86%E5%8F%B2%E4%BB%8B%E7%BB%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Tang Yao">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="朝闻道">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          NLP基本概念及发展历史介绍
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-12-05 19:27:02 / 修改时间：19:36:32" itemprop="dateCreated datePublished" datetime="2019-12-05T19:27:02+08:00">2019-12-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nlp/" itemprop="url" rel="index">
+                    <span itemprop="name">nlp</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文基于宗成庆老师的《统计自然语言处理》一书，整理了自然语言处理领域的基本概念、所要研究的基本问题、研究目前面临的瓶颈、基本研究方法及研究现状。</p>
+<p>详细内容请点击阅读全文</p>
+<a id="more"></a>
+
+<table>
+<thead>
+<tr>
+<th>问题的提出</th>
+<th></th>
+<th></th>
+<th>中文网页检索的最高准确率不足40%</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+<td></td>
+<td>跨语言通讯和信息获取技术具有重要的用途</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>发现或挖掘社交网络，确定不同的实体、事件和知识之间的关联</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>让计算机能够自动或半自动地理解自然语言文本，懂得人的意图和心声</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>让计算机实现海量语言文本的自动处理、挖掘和有效利用，满足不同用户的各种需求，实现个性化信息服务</td>
+<td></td>
+</tr>
+<tr>
+<td>基本概念</td>
+<td>相关学科简介</td>
+<td>语言学</td>
+<td>研究语言的本质、结构和发展规律的科学</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>语音学</td>
+<td>语音和文字是语言的两个基本属性</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>计算语言学</td>
+<td>人工智能和语言学的分支学科</td>
+<td>通过建立形式化的计算模型来分析、理解和生成自然语言的学科</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>自然语言处理</td>
+<td>研究如何利用计算机技术对语言文本（句子、篇章或话语等）进行处理和加工的一门学科</td>
+<td>包括对词法、句法、语义和语用等信息的识别、分类、提取、转换和生成等各种处理方法和实现技术</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>自然语言理解</td>
+<td>是探索人类自身语言能力和语言思 维活动的本质，研究模仿人类语言认知过程的自然语 言处理方法和实现技术的一门学科</td>
+<td>表现(act)如何？ 反应(react)如何？ 相互作用(interact )如何？</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>中文信息处理</td>
+<td>针对中文的自然语言处理技术</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>三个不同的语系</td>
+<td>屈折语(fusional language/ inflectional language)</td>
+<td>用词的形态变化表示语法关系</td>
+<td>英语、法语</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>黏着语(agglutinative language)</td>
+<td>词内有专门表示语法意义的附加成分，词根或词干与附加成分的结合不紧密</td>
+<td>日语、韩语、土耳其语</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>孤立语(analytic language)(分析语, isolating language)</td>
+<td>形态变化少，语法关系靠词序和虚词表示</td>
+<td>汉语</td>
+</tr>
+<tr>
+<td></td>
+<td>人类语言技术（HLT）</td>
+<td>应用目标</td>
+<td>机器翻译(Machine translation, MT)</td>
+<td>实现一种语言到另一种语言的自动翻译。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>信息检索(Information retrieval)</td>
+<td>也称情报检索，就是利用计算机系统从大量文档中找到符合用户需要的相关信息</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>自动文摘 (Automatic summarization / Automatic  abstracting)</td>
+<td>将原文档的主要内容或某方面的内容提取出来，形成原文档的摘要</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>问答系统 (Question-answering system)</td>
+<td>通过计算机系统对人提出的问题的理解，利用自动推理等手段，在有关知识资源中自动求解答案并做出相应的回答。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>信息过滤 (Information filtering)</td>
+<td>通过计算机系统自动识别和过滤那些满足特定条件 的文档信息。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>信息抽取 (Information extraction)</td>
+<td>从指定文档中或者海量文本中抽取出用户感兴趣的信息。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>文档分类 (Document categorization)</td>
+<td>其目的就是利用计算机系统对大量的文档按照一定的分类标准（例如，根据主题或内容划分等）实现自动归类。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>情感分类(Sentimental classification)</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>文字编辑和自动校对(Automatic proofreading)</td>
+<td>对文字拼写、用词、甚至语法、文档格式等进行自动检查、校对和编排。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>语言教学 (Language teaching)</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>文字识别 (Character recognition)</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>语音识别 (automatic speech recognition, ASR)</td>
+<td>将输入语音信号自动转换成书面文字。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>文语转换/ 语音合成 (text-to-speech synthesis)</td>
+<td>将书面文本自动转换成对应的语音表征。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>说话人识别/认同/验证 (speaker recognition/  identification/ verification)</td>
+<td>对一言语样品做声学分析，依此推断(确定或 验证)说话人的身份。</td>
+</tr>
+<tr>
+<td>基本问题</td>
+<td>形态学 (Morphology) 问题</td>
+<td></td>
+<td>单词的识别/ 汉语的分词问题。</td>
+<td>研究词(word) 由有意义的基本单位－词素 (morphemes)的构成问题。</td>
+</tr>
+<tr>
+<td></td>
+<td>句法 (Syntax) 问题</td>
+<td></td>
+<td>研究句子结构成分之间的相互关系和组成句子 序列的规则 。</td>
+<td>建立快速有效的句子结构分析方法</td>
+</tr>
+<tr>
+<td></td>
+<td>语义 (Semantics) 问题</td>
+<td></td>
+<td>研究如何从一个语句中词的意义，以及这些词 在该语句中句法结构中的作用来推导出该语句的意 义。</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>语用学(Pragmatics) 问题</td>
+<td></td>
+<td>研究在不同上下文中语句的应用，以及上下文 对语句理解所产生的影响。</td>
+<td>是研究语义学未能涵盖 的那些意义。</td>
+</tr>
+<tr>
+<td></td>
+<td>语音学(Phonetics) 问题</td>
+<td></td>
+<td>研究语音特性、语音描述、分类及转写方法等</td>
+<td></td>
+</tr>
+<tr>
+<td>主要困难</td>
+<td>大量歧义(ambiguity)现象</td>
+<td>词法歧义、词性歧义、结构歧义、语义歧义、语音歧义、多音字及韵律等歧义</td>
+<td>普遍存在的不确定性：词法、句法、语义、语用和语音各个层面 未知语言现象的不可预测性：新的词汇、新的术语、新的语义和语法无处不在 始终面临的数据不充分性：有限的语言集合永远无法涵盖开放的语言现象 语言知识表达的复杂性：语义知识的模糊性和错综复杂的关联性难以用常规方法有效地描述，为语义计算带来了极大的困难 机器翻译中映射单元的不对等性：词法表达不相同、句法结构不一致、语义概念不对等</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>大量未知语言现象</td>
+<td>新词、人名、地名、术语等</td>
+<td>新含义</td>
+<td>新用法和新句型等</td>
+</tr>
+<tr>
+<td>基本研究方法</td>
+<td>理性主义</td>
+<td>基于规则的分析方法建立符号处理系统</td>
+<td>知识库＋推理系统 = NLP系统</td>
+<td>理论基础：Chomsky 的文法理论</td>
+</tr>
+<tr>
+<td></td>
+<td>经验主义</td>
+<td>基于大规模真实语料(语言数据)建立计算方法</td>
+<td>语料库＋统计模型 = NLP系统</td>
+<td>理论基础：统计学、信息论、机器学习</td>
+</tr>
+<tr>
+<td></td>
+<td>数据驱动的翻译方法（如SMT和 NMT）</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>基于统计的方法</td>
+<td></td>
+<td>根据贝叶斯公式求解使P值（概率）最大的C（目标句子）</td>
+<td></td>
+</tr>
+<tr>
+<td>研究现状</td>
+<td>部分问题得到了解决，可以为人们提供辅助性帮助，如：专业领域文档翻译，电子词典，搜索引擎，文字录入等；</td>
+<td></td>
+<td>基础问题研究仍任重而道远，如：语义表示和 计算、高质量的自动翻译等；</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>参考文献：</p>
+<p>[1]宗成庆.统计自然语言处理[M].清华大学出版社:北京,2013:266.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%8A%80%E6%9C%AF%E6%89%80%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98/" rel="tag"># 技术所存在问题</a>
+              <a href="/tags/%E6%8A%80%E6%9C%AF%E5%8F%91%E5%B1%95%E5%8F%B2/" rel="tag"># 技术发展史</a>
+              <a href="/tags/nlp/" rel="tag"># nlp</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/08/hive%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8Ajava%E8%BF%9E%E6%8E%A5/" rel="next" title="hive常用命令及Java连接">
+                  <i class="fa fa-chevron-left"></i> hive常用命令及Java连接
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Tang Yao"
+    src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Tang Yao</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tang Yao</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.5.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
